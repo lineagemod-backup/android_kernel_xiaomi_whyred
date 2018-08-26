@@ -429,7 +429,11 @@ static int put_v4l2_plane32(struct v4l2_plane __user *up,
 
 	if (copy_in_user(up32, up, 2 * sizeof(__u32)) ||
 	    copy_in_user(up32->reserved, up->reserved,
+<<<<<<< HEAD
 			 sizeof(up->reserved)) ||
+=======
+			 sizeof(up32->reserved)) ||
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 	    copy_in_user(&up32->data_offset, &up->data_offset,
 			 sizeof(up->data_offset)))
 		return -EFAULT;

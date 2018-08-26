@@ -25,11 +25,14 @@
 #include "dsi-panel-truly-1080p-cmd.dtsi"
 #include "dsi-panel-truly-1080p-video.dtsi"
 #include "dsi-panel-rm67195-amoled-fhd-cmd.dtsi"
+<<<<<<< HEAD
 #include "dsi-panel-tianma-td4310-1080p-video.dtsi"
 #include "dsi-panel-tianma-nt36672-1080p-video.dtsi"
 #include "dsi-panel-jdi-nt36672-1080p-video.dtsi"
 #include "dsi-panel-shenchao-td4310-1080p-video.dtsi"
 #include "dsi-panel-huaxing-nt36672-1080p-video.dtsi"
+=======
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 #include "dsi-panel-lgd-incell-sw49106-fhd-video.dtsi"
 #include "dsi-panel-hx8399c-fhd-plus-video.dtsi"
 

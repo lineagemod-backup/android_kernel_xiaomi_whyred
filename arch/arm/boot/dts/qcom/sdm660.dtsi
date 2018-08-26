@@ -315,7 +315,11 @@
 					dev = "/dev/block/platform/soc/c0c4000.sdhci/by-name/vendor";
 					type = "ext4";
 					mnt_flags = "ro,barrier=1,discard";
+<<<<<<< HEAD
 					fsmgr_flags = "wait,verify";
+=======
+					fsmgr_flags = "wait,slotselect,verify";
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 					status = "ok";
 				};
 			};
@@ -685,6 +689,16 @@
 		clocks = <&clock_gcc GCC_BLSP1_UART2_APPS_CLK>,
 			 <&clock_gcc GCC_BLSP1_AHB_CLK>;
 		clock-names = "core", "iface";
+	};
+
+	qcom,qbt1000 {
+		compatible = "qcom,qbt1000";
+		clock-names = "core", "iface";
+		clocks = <&clock_gcc GCC_BLSP1_QUP3_SPI_APPS_CLK>,
+			<&clock_gcc GCC_BLSP1_AHB_CLK>;
+		clock-frequency = <15000000>;
+		qcom,ipc-gpio = <&tlmm 72 0>;
+		qcom,finger-detect-gpio = <&pm660_gpios 11 0>;
 	};
 
 	qcom,sensor-information {
@@ -1579,11 +1593,12 @@
 		};
 	};
 
-	qcom,rmtfs_sharedmem@85e00000 {
+	qcom,rmtfs_sharedmem@0 {
 		compatible = "qcom,sharedmem-uio";
-		reg = <0x85e00000 0x200000>;
+		reg = <0x0 0x200000>;
 		reg-names = "rmtfs";
 		qcom,client-id = <0x00000001>;
+		qcom,guard-memory;
 	};
 
 	qcom,rmnet-ipa {
@@ -2004,6 +2019,7 @@
 	qcom,lpass@15700000 {
 		compatible = "qcom,pil-tz-generic";
 		reg = <0x15700000 0x00100>;
+		reg-names = "base_reg";
 		interrupts = <0 162 1>;
 
 		vdd_cx-supply = <&pm660l_l9_level>;
@@ -2036,6 +2052,7 @@
 	qcom,turing@1a300000 {
 		compatible = "qcom,pil-tz-generic";
 		reg = <0x1a300000 0x00100>;
+		reg-names = "base_reg";
 		interrupts = <0 518 1>;
 
 		vdd_cx-supply = <&pm660l_s3_level>;

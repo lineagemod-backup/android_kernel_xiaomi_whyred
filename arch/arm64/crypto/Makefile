@@ -32,8 +32,13 @@ aes-ce-blk-y := aes-glue-ce.o aes-ce.o
 obj-$(CONFIG_CRYPTO_AES_ARM64_NEON_BLK) += aes-neon-blk.o
 aes-neon-blk-y := aes-glue-neon.o aes-neon.o
 
+<<<<<<< HEAD
 obj-$(CONFIG_CRYPTO_AES_ARM64) += aes-arm64.o
 aes-arm64-y := aes-cipher-core.o aes-cipher-glue.o
+=======
+obj-$(CONFIG_CRYPTO_SPECK_NEON) += speck-neon.o
+speck-neon-y := speck-neon-core.o speck-neon-glue.o
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 
 AFLAGS_aes-ce.o		:= -DINTERLEAVE=4
 AFLAGS_aes-neon.o	:= -DINTERLEAVE=4

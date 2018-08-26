@@ -16,6 +16,13 @@
 #ifndef __ASM_MMU_H
 #define __ASM_MMU_H
 
+<<<<<<< HEAD
+=======
+#define USER_ASID_FLAG	(UL(1) << 48)
+#define TTBR_ASID_MASK	(UL(0xffff) << 48)
+
+#ifndef __ASSEMBLY__
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 #include <linux/smp.h>
 
 #include <asm/cpufeature.h>
@@ -33,6 +40,15 @@ typedef struct {
  */
 #define ASID(mm)	((mm)->context.id.counter & 0xffff)
 
+<<<<<<< HEAD
+=======
+static inline bool arm64_kernel_unmapped_at_el0(void)
+{
+	return IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0) &&
+	       cpus_have_cap(ARM64_UNMAP_KERNEL_AT_EL0);
+}
+
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 typedef void (*bp_hardening_cb_t)(void);
 
 struct bp_hardening_data {
@@ -77,5 +93,13 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
 			       unsigned long virt, phys_addr_t size,
 			       pgprot_t prot);
 extern void *fixmap_remap_fdt(phys_addr_t dt_phys);
+#ifdef CONFIG_MEMORY_HOTPLUG
+extern void hotplug_paging(phys_addr_t start, phys_addr_t size);
+#ifdef CONFIG_MEMORY_HOTREMOVE
+extern void remove_pagetable(unsigned long start,
+	unsigned long end, bool direct);
+#endif
+#endif
 
+#endif	/* !__ASSEMBLY__ */
 #endif

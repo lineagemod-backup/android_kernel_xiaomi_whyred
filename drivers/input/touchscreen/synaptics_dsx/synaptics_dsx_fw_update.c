@@ -1622,6 +1622,7 @@ static int fwu_write_f34_v7_command(unsigned char cmd)
 
 	data_base = fwu->f34_fd.data_base_addr;
 
+<<<<<<< HEAD
 	switch (cmd) {
 	case CMD_WRITE_FW:
 	case CMD_WRITE_CONFIG:
@@ -1656,6 +1657,14 @@ static int fwu_write_f34_v7_command(unsigned char cmd)
 				__func__, cmd);
 		return -EINVAL;
 	};
+=======
+		while ((index < MAX_FIRMWARE_ID_LEN - 1) && strptr[index] >= '0'
+						&& strptr[index] <= '9') {
+			firmware_id[index] = strptr[index];
+			index++;
+		}
+		firmware_id[index] = '\0';
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee
 
 	fwu->command = command;
 

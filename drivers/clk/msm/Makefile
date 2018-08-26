@@ -30,6 +30,12 @@ endif
 obj-$(CONFIG_COMMON_CLK_MSM)	+= gdsc.o
 obj-$(CONFIG_COMMON_CLK_MSM)	+= mdss/
 
+<<<<<<< HEAD
 # TODO: remove me b/62058353
 subdir-ccflags-y += \
 	-Wno-literal-conversion
+=======
+obj-$(CONFIG_MSM_VIRTCLK_FRONTEND)	+= virtclk-front.o
+obj-$(CONFIG_MSM_VIRTCLK_FRONTEND)	+= virt-reset-front.o
+obj-$(CONFIG_MSM_VIRTCLK_FRONTEND_8996)	+= virtclk-front-8996.o
+>>>>>>> cc5ea34f7f62f9b76ad96b78cbd7897fe9c4f8ee

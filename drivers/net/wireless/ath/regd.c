@@ -259,7 +259,7 @@ static bool ath_is_radar_freq(u16 center_freq,
 
 {
 	if (reg->country_code == CTRY_INDIA)
-		return (center_freq >= 5500 && center_freq <= 5720);
+		return (center_freq >= 5500 && center_freq <= 5700);
 	return (center_freq >= 5260 && center_freq <= 5720);
 }
 
@@ -340,12 +340,12 @@ ath_reg_apply_beaconing_flags(struct wiphy *wiphy,
 			      struct ath_regulatory *reg,
 			      enum nl80211_reg_initiator initiator)
 {
-	enum nl80211_band band;
+	enum ieee80211_band band;
 	struct ieee80211_supported_band *sband;
 	struct ieee80211_channel *ch;
 	unsigned int i;
 
-	for (band = 0; band < NUM_NL80211_BANDS; band++) {
+	for (band = 0; band < IEEE80211_NUM_BANDS; band++) {
 		if (!wiphy->bands[band])
 			continue;
 		sband = wiphy->bands[band];
@@ -378,7 +378,7 @@ ath_reg_apply_ir_flags(struct wiphy *wiphy,
 {
 	struct ieee80211_supported_band *sband;
 
-	sband = wiphy->bands[NL80211_BAND_2GHZ];
+	sband = wiphy->bands[IEEE80211_BAND_2GHZ];
 	if (!sband)
 		return;
 
@@ -407,10 +407,10 @@ static void ath_reg_apply_radar_flags(struct wiphy *wiphy,
 	struct ieee80211_channel *ch;
 	unsigned int i;
 
-	if (!wiphy->bands[NL80211_BAND_5GHZ])
+	if (!wiphy->bands[IEEE80211_BAND_5GHZ])
 		return;
 
-	sband = wiphy->bands[NL80211_BAND_5GHZ];
+	sband = wiphy->bands[IEEE80211_BAND_5GHZ];
 
 	for (i = 0; i < sband->n_channels; i++) {
 		ch = &sband->channels[i];
@@ -636,6 +636,8 @@ ath_regd_init_wiphy(struct ath_regulatory *reg,
 					 struct regulatory_request *request))
 {
 	const struct ieee80211_regdomain *regd;
+	u32 chan_num;
+	struct ieee80211_channel *chan;
 
 	wiphy->reg_notifier = reg_notifier;
 	wiphy->regulatory_flags |= REGULATORY_STRICT_REG |
@@ -658,6 +660,20 @@ ath_regd_init_wiphy(struct ath_regulatory *reg,
 	}
 
 	wiphy_apply_custom_regulatory(wiphy, regd);
+
+	/* For regulatory rules similar to the following:
+	 * REG_RULE(2412-10, 2462+10, 40, 0, 20, 0), channels 12/13 are enabled
+	 * due to support of 5/10 MHz.
+	 * Therefore, disable 2.4 Ghz channels that dont have 20 mhz bw
+	 */
+	for (chan_num = 0;
+	     chan_num < wiphy->bands[IEEE80211_BAND_2GHZ]->n_channels;
+	     chan_num++) {
+		chan = &wiphy->bands[IEEE80211_BAND_2GHZ]->channels[chan_num];
+		if (chan->flags & IEEE80211_CHAN_NO_20MHZ)
+			chan->flags |= IEEE80211_CHAN_DISABLED;
+	}
+
 	ath_reg_apply_radar_flags(wiphy, reg);
 	ath_reg_apply_world_flags(wiphy, NL80211_REGDOM_SET_BY_DRIVER, reg);
 	return 0;
@@ -777,7 +793,7 @@ ath_regd_init(struct ath_regulatory *reg,
 EXPORT_SYMBOL(ath_regd_init);
 
 u32 ath_regd_get_band_ctl(struct ath_regulatory *reg,
-			  enum nl80211_band band)
+			  enum ieee80211_band band)
 {
 	if (!reg->regpair ||
 	    (reg->country_code == CTRY_DEFAULT &&
@@ -799,9 +815,9 @@ u32 ath_regd_get_band_ctl(struct ath_regulatory *reg,
 	}
 
 	switch (band) {
-	case NL80211_BAND_2GHZ:
+	case IEEE80211_BAND_2GHZ:
 		return reg->regpair->reg_2ghz_ctl;
-	case NL80211_BAND_5GHZ:
+	case IEEE80211_BAND_5GHZ:
 		return reg->regpair->reg_5ghz_ctl;
 	default:
 		return NO_CTL;
