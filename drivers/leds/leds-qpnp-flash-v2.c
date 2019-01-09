@@ -1713,7 +1713,6 @@ static int qpnp_flash_led_parse_each_led_dt(struct qpnp_flash_led *led,
 	return 0;
 }
 
-
 static int qpnp_flashlight_led_parse_and_register(struct qpnp_flash_led *led,
 			struct flashlight_node_data *flashlight_node, struct device_node *node)
 {
@@ -1789,7 +1788,6 @@ static int qpnp_flashlight_led_parse_and_register(struct qpnp_flash_led *led,
 	flashlight_node->cdev.dev->of_node = node;
 	return 0;
 }
-
 
 static int qpnp_flash_led_parse_and_register_switch(struct qpnp_flash_led *led,
 						struct flash_switch_data *snode,
@@ -2353,7 +2351,7 @@ static int qpnp_flash_led_probe(struct platform_device *pdev)
 			led->num_fnodes++;
 		} else if (!strcmp("flashlight", temp_string)){
 			led->num_flashlight_nodes++;
-		}else {
+		} else {
 			pr_err("Invalid label for led node\n");
 			return -EINVAL;
 		}
@@ -2426,7 +2424,6 @@ static int qpnp_flash_led_probe(struct platform_device *pdev)
 			}
 			k++;
 		}
-
 	}
 
 	/* setup irqs */
