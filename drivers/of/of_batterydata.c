@@ -348,7 +348,6 @@ struct device_node *of_batterydata_get_best_profile(
 				break;
 			}
 		} else {
-
 			rc = of_batterydata_read_batt_id_kohm(node,
 							"qcom,batt-id-kohm",
 							&batt_ids);
@@ -369,13 +368,12 @@ struct device_node *of_batterydata_get_best_profile(
 					best_delta = delta;
 					best_id_kohm = batt_ids.kohm[i];
 				}
-
 			}
 		}
 	}
 
 	if (best_node == NULL) {
-		pr_err("sunxing detect No battery data configed,add default\n");
+		pr_err("sunxing detect No battery data configed, add default\n");
 		best_node = node;
 		best_id_kohm = batt_ids.kohm[i];
 		return best_node;
