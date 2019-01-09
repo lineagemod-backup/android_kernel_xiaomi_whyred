@@ -1106,7 +1106,7 @@ int subsystem_restart_dev(struct subsys_device *dev)
 		return -EBUSY;
 	}
 
-	if (download_mode == 0){
+	if (download_mode == 0) {
 		dev->restart_level = 1;
 	}
 

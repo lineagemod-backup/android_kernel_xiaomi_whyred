@@ -1053,8 +1053,8 @@ static int qpnp_hap_parse_buffer_dt(struct qpnp_hap *hap)
 		memcpy(hap->wave_samp, prop->value, QPNP_HAP_WAV_SAMP_LEN);
 	}
 
-		prop = of_find_property(pdev->dev.of_node,
-			"qcom,wave-samples-two", &temp);
+	prop = of_find_property(pdev->dev.of_node,
+		"qcom,wave-samples-two", &temp);
 	if (!prop || temp != QPNP_HAP_WAV_SAMP_LEN) {
 		pr_err("Invalid wave samples, use default");
 		for (i = 0; i < QPNP_HAP_WAV_SAMP_LEN; i++)
@@ -1063,8 +1063,8 @@ static int qpnp_hap_parse_buffer_dt(struct qpnp_hap *hap)
 		memcpy(hap->wave_samp_two, prop->value, QPNP_HAP_WAV_SAMP_LEN);
 	}
 
-		prop = of_find_property(pdev->dev.of_node,
-			"qcom,wave-samples-three", &temp);
+	prop = of_find_property(pdev->dev.of_node,
+		"qcom,wave-samples-three", &temp);
 	if (!prop || temp != QPNP_HAP_WAV_SAMP_LEN) {
 		pr_err("Invalid wave samples, use default");
 		for (i = 0; i < QPNP_HAP_WAV_SAMP_LEN; i++)
@@ -1072,7 +1072,6 @@ static int qpnp_hap_parse_buffer_dt(struct qpnp_hap *hap)
 	} else {
 		memcpy(hap->wave_samp_three, prop->value, QPNP_HAP_WAV_SAMP_LEN);
 	}
-
 
 	return 0;
 }
