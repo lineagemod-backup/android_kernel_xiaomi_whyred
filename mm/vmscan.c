@@ -3511,10 +3511,6 @@ static void kswapd_try_to_sleep(pg_data_t *pgdat, int order,
 	finish_wait(&pgdat->kswapd_wait, &wait);
 }
 
-#if defined(CONFIG_ANDROID_WHETSTONE)
-extern void wakeup_kmemsw_chkd(void);
-#endif
-
 /*
  * The background pageout daemon, started as a kernel thread
  * from the init process.
@@ -3607,9 +3603,6 @@ static int kswapd(void *p)
 			trace_mm_vmscan_kswapd_wake(pgdat->node_id, order);
 			balanced_classzone_idx = balance_pgdat(pgdat, order,
 								classzone_idx);
-#if defined(CONFIG_ANDROID_WHETSTONE)
-                         wakeup_kmemsw_chkd();
-#endif
 		}
 	}
 
