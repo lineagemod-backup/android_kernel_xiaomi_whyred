@@ -77,8 +77,6 @@ static int dload_type = SCM_DLOAD_FULLDUMP;
  int download_mode = 0;
 #elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 int download_mode = 0;
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
-int download_mode = 0;
 #else
  int download_mode = 1;
 #endif

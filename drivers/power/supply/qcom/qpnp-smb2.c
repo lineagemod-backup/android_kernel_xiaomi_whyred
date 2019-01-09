@@ -40,10 +40,6 @@ union power_supply_propval lct_therm_level;
 union power_supply_propval lct_therm_call_level = {4,};
 union power_supply_propval lct_therm_globe_level = {1,};
 union power_supply_propval lct_therm_india_level = {2,};
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
-union power_supply_propval lct_therm_call_level = {5,};
-union power_supply_propval lct_therm_globe_level = {1,};
-union power_supply_propval lct_therm_india_level = {2,};
 #else
 union power_supply_propval lct_therm_call_level = {3,};
 union power_supply_propval lct_therm_globe_level = {2,};
@@ -57,10 +53,6 @@ extern bool is_poweroff_charge;
 #endif
 
 #define SMB2_DEFAULT_WPWR_UW	8000000
-
-#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-static bool miui_charging_enabled = true;
-#endif
 
 #ifdef CONFIG_CHARGER_RUNIN
 static int BatteryTestStatus_enable;
@@ -259,15 +251,6 @@ static int smb2_parse_dt(struct smb2 *chip)
 
 	rc = of_property_read_u32(node,
 				"qcom,fcc-max-ua", &chg->batt_profile_fcc_ua);
-#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	if (is_poweroff_charge == true)
-	{
-		if (hwc_check_india == 1)
-			chg->batt_profile_fcc_ua = 2200000;
-		else
-			chg->batt_profile_fcc_ua = 2300000;
-	}
-#endif
 	if (rc < 0)
 		chg->batt_profile_fcc_ua = -EINVAL;
 
@@ -314,7 +297,7 @@ static int smb2_parse_dt(struct smb2 *chip)
 	if (rc < 0)
 		chip->dt.wipower_max_uw = -EINVAL;
 
-#if (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP))
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 	if (hwc_check_india == 1){
 #endif
 	if (of_find_property(node, "qcom,thermal-mitigation", &byte_len)) {
@@ -335,7 +318,7 @@ static int smb2_parse_dt(struct smb2 *chip)
 			return rc;
 		}
 	}
-#if (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP))
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 	}
 	else {
 		if (of_find_property(node, "qcom,thermal-mitigation-china", &byte_len)) {
@@ -1011,16 +994,8 @@ static enum power_supply_property smb2_batt_props[] = {
 	POWER_SUPPLY_PROP_RERUN_AICL,
 	POWER_SUPPLY_PROP_DP_DM,
 	POWER_SUPPLY_PROP_CHARGE_COUNTER,
-
 	POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-
-	#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	POWER_SUPPLY_PROP_CHARGING_ENABLED,
-	#endif
 };
-
-
-
 
 static int smb2_batt_get_prop(struct power_supply *psy,
 		enum power_supply_property psp,
@@ -1144,11 +1119,6 @@ static int smb2_batt_get_prop(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_CHARGE_COUNTER:
 		rc = smblib_get_prop_batt_charge_counter(chg, val);
 		break;
-	#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
-		val->intval = miui_charging_enabled;
-		break;
-	#endif
 	default:
 		pr_err("batt power supply prop %d not supported\n", psp);
 		return -EINVAL;
@@ -1249,28 +1219,6 @@ static int smb2_batt_set_prop(struct power_supply *psy,
 		power_supply_changed(chg->batt_psy);
 		break;
 	#endif
-	#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
-		miui_charging_enabled = val->intval;
-		if (miui_charging_enabled){
-			rc = smblib_set_dc_suspend(chg, false);
-			if (rc) {
-				pr_err("Couldn't disable charge rc=%d\n", rc);
-			}
-			rc = smblib_set_usb_suspend(chg, false);
-			if (rc)
-				pr_err("Couldn't disable usb charge rc=%d\n", rc);
-		}else{
-			rc = smblib_set_dc_suspend(chg, true);
-			if (rc) {
-				pr_err("Couldn't enable charge rc=%d\n", rc);
-			}
-			rc = smblib_set_usb_suspend(chg, true);
-			if (rc)
-				pr_err("Couldn't enable usb charge rc=%d\n", rc);
-		}
-		break;
-	#endif
 	default:
 		rc = -EINVAL;
 	}
@@ -1293,9 +1241,6 @@ static int smb2_batt_prop_is_writeable(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_SW_JEITA_ENABLED:
 #if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 	case POWER_SUPPLY_PROP_DIE_HEALTH:
-#endif
-#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	case POWER_SUPPLY_PROP_CHARGING_ENABLED:
 #endif
 		return 1;
 	default:
@@ -1655,13 +1600,7 @@ static int smb2_init_hw(struct smb2 *chip)
 		return rc;
 	}
 
-#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	if ((is_poweroff_charge == false) && (stat != 0x01)) {
 		smblib_rerun_apsd_if_required(chg);
-	}
-#else
-		smblib_rerun_apsd_if_required(chg);
-#endif
 
 	/* clear the ICL override if it is set */
 	if (smblib_icl_override(chg, false) < 0) {
@@ -1696,7 +1635,7 @@ static int smb2_init_hw(struct smb2 *chip)
 	vote(chg->hvdcp_enable_votable, MICRO_USB_VOTER,
 			chg->micro_usb_mode, 0);
 
-#if (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP))
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 
 	/* Operate the QC2.0 in 5V/9V mode i.e. Disable 12V */
 	rc = smblib_masked_write(chg, HVDCP_PULSE_COUNT_MAX_REG,
@@ -2535,12 +2474,6 @@ static void thermal_fb_notifier_resume_work(struct work_struct *work)
 		}
 	}
 	else if (LctIsInCall == 1)
-		smblib_set_prop_system_temp_level(chg, &lct_therm_call_level);
-	else
-		smblib_set_prop_system_temp_level(chg, &lct_therm_lvl_reserved);
-	LctThermal = 0;
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	if (LctIsInCall == 1)
 		smblib_set_prop_system_temp_level(chg, &lct_therm_call_level);
 	else
 		smblib_set_prop_system_temp_level(chg, &lct_therm_lvl_reserved);

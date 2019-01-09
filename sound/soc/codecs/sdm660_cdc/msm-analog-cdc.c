@@ -4014,11 +4014,8 @@ static void msm_anlg_cdc_configure_cap(struct snd_soc_codec *codec,
 				MSM89XX_PMIC_ANALOG_MICB_1_EN,
 				0x40, (MICBIAS_NO_EXT_BYP_CAP << 6));
 	} else if (micbias2) {
-#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-#else
 		snd_soc_update_bits(codec, MSM89XX_PMIC_ANALOG_MICB_1_EN,
 				0x40, (pdata->micbias2_cap_mode << 6));
-#endif
 	} else if (micbias1) {
 		snd_soc_update_bits(codec, MSM89XX_PMIC_ANALOG_MICB_1_EN,
 				0x40, (pdata->micbias1_cap_mode << 6));

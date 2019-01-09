@@ -2205,11 +2205,7 @@ static int qpnp_wled_parse_dt(struct qpnp_wled *wled)
 	rc = of_property_read_u32(pdev->dev.of_node,
 			"qcom,switch-freq-khz", &temp_val);
 	if (!rc) {
-	#ifdef CONFIG_KERNEL_CUSTOM_TULIP
-		wled->switch_freq_khz = 1600;
-	#else
 		wled->switch_freq_khz = temp_val;
-	#endif
 	} else if (rc != -EINVAL) {
 		dev_err(&pdev->dev, "Unable to read switch freq\n");
 		return rc;
@@ -2312,11 +2308,7 @@ static int qpnp_wled_parse_dt(struct qpnp_wled *wled)
 	rc = of_property_read_u32(pdev->dev.of_node,
 			"qcom,fs-curr-ua", &temp_val);
 	if (!rc) {
-#ifdef CONFIG_KERNEL_CUSTOM_TULIP
-		wled->fs_curr_ua = 20000;
-#else
 		wled->fs_curr_ua = temp_val;
-#endif
 	} else if (rc != -EINVAL) {
 		dev_err(&pdev->dev, "Unable to read full scale current\n");
 		return rc;

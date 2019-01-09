@@ -1293,15 +1293,9 @@ int32_t msm_sensor_driver_probe(void *setting,
 	unsigned long                        mount_pos = 0;
 	uint32_t                             is_yuv;
 
-
 #ifdef CONFIG_KERNEL_CUSTOM_WHYRED
 	uint32_t                             i = 0;
 #endif
-
-#ifdef CONFIG_KERNEL_CUSTOM_TULIP
-	uint32_t                             j = 0;
-#endif
-
 
 	/* Validate input parameters */
 	if (!setting) {
@@ -1400,7 +1394,6 @@ int32_t msm_sensor_driver_probe(void *setting,
 		goto free_slave_info;
 	}
 
-
 #ifdef CONFIG_KERNEL_CUSTOM_WHYRED
 	if ((strcmp(slave_info->eeprom_name, "whyred_s5k5e8_ofilm_i") == 0) ||
 		(strcmp(slave_info->eeprom_name, "whyred_s5k5e8_qtech_ii") == 0)){
@@ -1429,56 +1422,6 @@ int32_t msm_sensor_driver_probe(void *setting,
 		}
 	}
 #endif
-
-
-
-#ifdef CONFIG_KERNEL_CUSTOM_TULIP
-	if ((strcmp(slave_info->eeprom_name, "tulip_s5k5e8_ofilm_i") == 0)
-			|| (strcmp(slave_info->eeprom_name, "tulip_s5k5e8_sunny_ii") == 0)
-			|| (strcmp(slave_info->eeprom_name, "tulip_s5k5e8_qtech_ii") == 0)
-			|| (strcmp(slave_info->eeprom_name, "tulip_ov02a10_ofilm_ii") == 0)
-			|| (strcmp(slave_info->eeprom_name, "tulip_ov02a10_sunny_i") == 0)
-
-		){
-
-		for (j = 0; j < CAMERA_VENDOR_EEPROM_COUNT_MAX; j++){
-			if (s_vendor_eeprom[j].eeprom_name != NULL){
-				printk(" slave_info->eeprom_name=%s, s_vendor_eeprom[%d]=%s, module_id=%d\n",
-					slave_info->eeprom_name, j, s_vendor_eeprom[j].eeprom_name, s_vendor_eeprom[j].module_id);
-				if (strcmp(slave_info->eeprom_name, s_vendor_eeprom[j].eeprom_name) == 0){
-
-					if (((strcmp(slave_info->eeprom_name, "tulip_s5k5e8_ofilm_i") == 0) &&
-						(s_vendor_eeprom[j].module_id == MID_OFILM))
-						|| ((strcmp(slave_info->eeprom_name, "tulip_s5k5e8_qtech_ii") == 0) &&
-						  (s_vendor_eeprom[j].module_id == MID_QTECH))
-						|| ((strcmp(slave_info->eeprom_name, "tulip_s5k5e8_sunny_ii") == 0) &&
-						  (s_vendor_eeprom[j].module_id == MID_SUNNY))
-						|| ((strcmp(slave_info->eeprom_name, "tulip_ov02a10_ofilm_ii") == 0) &&
-						  (s_vendor_eeprom[j].module_id == MID_OFILM))
-						|| ((strcmp(slave_info->eeprom_name, "tulip_ov02a10_sunny_i") == 0) &&
-						  (s_vendor_eeprom[j].module_id == MID_SUNNY))
-
-					   ){
-							printk("Lc module found!probe continue!\n");
-						break;
-					}
-				}
-			}
-		}
-
-		if (j >= CAMERA_VENDOR_EEPROM_COUNT_MAX){
-			pr_err(" Lc module not found!probe break failed!\n");
-			rc = -EFAULT;
-			goto free_slave_info;
-		}
-	}
-#endif
-
-
-
-
-
-
 
 	/* Print slave info */
 	CDBG("camera id %d Slave addr 0x%X addr_type %d\n",

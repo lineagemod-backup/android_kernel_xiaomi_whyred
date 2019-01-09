@@ -910,7 +910,7 @@ static void handle_settled_icl_change(struct pl_data *chip)
 	int main_settled_ua;
 	int main_limited;
 	int total_current_ua;
-#if defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP)
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 	int battery_temp;
 	union power_supply_propval lct_pval = {0, };
 #endif
@@ -938,7 +938,7 @@ static void handle_settled_icl_change(struct pl_data *chip)
 		return;
 	}
 	main_limited = pval.intval;
-#if defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP)
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 	if (chip->pl_mode == POWER_SUPPLY_PL_USBIN_USBIN) {
 		rc = power_supply_get_property(chip->batt_psy,
 				       POWER_SUPPLY_PROP_TEMP,

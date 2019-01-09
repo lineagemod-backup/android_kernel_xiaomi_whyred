@@ -1020,7 +1020,7 @@ int mdss_first_set_feature(struct mdss_panel_data *pdata, int first_ce_state, in
 			break;
 
 	}
-#if (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP))
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 
 	switch(first_gamma_state) {
 		case 0x1:

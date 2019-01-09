@@ -28,8 +28,7 @@
 #include "storm-watch.h"
 #include "fg-core.h"
 
-
-#if (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined(CONFIG_KERNEL_CUSTOM_TULIP))
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 #define LCT_JEITA_CCC_AUTO_ADJUST  1
 #else
 #define LCT_JEITA_CCC_AUTO_ADJUST  0
@@ -1243,7 +1242,7 @@ static int smblib_hvdcp_hw_inov_dis_vote_callback(struct votable *votable,
 	struct smb_charger *chg = data;
 	int rc;
 
-	#if (defined(CONFIG_KERNEL_CUSTOM_WAYNE) || defined (CONFIG_KERNEL_CUSTOM_WHYRED) || defined (CONFIG_KERNEL_CUSTOM_TULIP))
+	#if defined(CONFIG_KERNEL_CUSTOM_WAYNE) || defined (CONFIG_KERNEL_CUSTOM_WHYRED)
 	disable = 0;
 	#endif
 	if (disable) {
@@ -2027,17 +2026,6 @@ int smblib_set_prop_system_temp_level(struct smb_charger *chg,
 		    return 0;
 		}
 	}
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	if (hwc_check_india == 1) {
-		if ((lct_backlight_off) && (LctIsInCall == 0) && (val->intval > 3)) {
-		    return 0;
-		}
-	}
-	else {
-		if ((lct_backlight_off) && (LctIsInCall == 0) && (val->intval > 3)) {
-		    return 0;
-		}
-	}
 #elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 	if ((lct_backlight_off) && (LctIsInCall == 0) && (val->intval > 2)) {
 		    return 0;
@@ -2055,10 +2043,6 @@ int smblib_set_prop_system_temp_level(struct smb_charger *chg,
 	if ((LctIsInCall == 1) && (val->intval != 4)) {
 	    return 0;
 	}
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
-	if ((LctIsInCall == 1) && (val->intval != 5)) {
-		return 0;
-	}
 #else
 	if ((LctIsInCall == 1) && (val->intval != 3)) {
 	    return 0;
@@ -2075,7 +2059,7 @@ int smblib_set_prop_system_temp_level(struct smb_charger *chg,
 	{
 		vote(chg->pl_disable_votable, THERMAL_DAEMON_VOTER, false, 0);
 	}
-#if (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined (CONFIG_KERNEL_CUSTOM_TULIP))
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 	else if (chg->system_temp_level <= 2)
 	{
 		vote(chg->pl_disable_votable, THERMAL_DAEMON_VOTER, false, 0);
@@ -2190,9 +2174,7 @@ static int smblib_dm_pulse(struct smb_charger *chg)
 
 #if defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 #define MAX_PLUSE_COUNT_ALLOWED 8
-#elif (defined(CONFIG_KERNEL_CUSTOM_WHYRED) || defined (CONFIG_KERNEL_CUSTOM_TULIP))
-#define MAX_PLUSE_COUNT_ALLOWED 15
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
+#elif defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 #define MAX_PLUSE_COUNT_ALLOWED 15
 #endif
 int smblib_dp_dm(struct smb_charger *chg, int val)
@@ -2689,8 +2671,6 @@ int smblib_get_prop_die_health(struct smb_charger *chg,
 #if defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 #define HVDCP_CURRENT_UA		2900000
 #elif defined(CONFIG_KERNEL_CUSTOM_WHYRED)
-#define HVDCP_CURRENT_UA		2000000
-#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
 #define HVDCP_CURRENT_UA		2000000
 #endif
 #define TYPEC_DEFAULT_CURRENT_UA	900000
@@ -3881,8 +3861,6 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		 */
 		#if defined (CONFIG_KERNEL_CUSTOM_WHYRED)
 		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 500000);
-		#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
 		#elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 		vote(chg->usb_icl_votable, USER_VOTER, false, 0);
 		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1000000);
@@ -3892,9 +3870,7 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		smblib_err(chg, "lct battery smblib_force_legacy_icl float charger\n");
 		break;
 	case POWER_SUPPLY_TYPE_USB_HVDCP:
-		#if defined(CONFIG_KERNEL_CUSTOM_TULIP)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 2000000);
-		#elif defined(CONFIG_KERNEL_CUSTOM_WHYRED)
+		#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 1500000);
 		#elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 		vote(chg->usb_icl_votable, USER_VOTER, true, 1500000);
@@ -3905,8 +3881,6 @@ static void smblib_force_legacy_icl(struct smb_charger *chg, int pst)
 		break;
 	case POWER_SUPPLY_TYPE_USB_HVDCP_3:
 		#if defined (CONFIG_KERNEL_CUSTOM_WHYRED)
-		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 2000000);
-		#elif defined(CONFIG_KERNEL_CUSTOM_TULIP)
 		vote(chg->usb_icl_votable, LEGACY_UNKNOWN_VOTER, true, 2000000);
 		#elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
 		vote(chg->usb_icl_votable, USER_VOTER, false, 0);
