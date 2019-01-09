@@ -236,12 +236,7 @@ static struct dev_config mi2s_rx_cfg[] = {
 };
 
 static struct dev_config mi2s_tx_cfg[] = {
-
-#if defined(CONFIG_SND_I2S_PRIMARY)
-	[PRIM_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 2},
-#else
 	[PRIM_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
-#endif
 	[SEC_MI2S]  = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
 	[TERT_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
 	[QUAT_MI2S] = {SAMPLING_RATE_48KHZ, SNDRV_PCM_FORMAT_S16_LE, 1},
@@ -410,7 +405,7 @@ static struct afe_clk_set mi2s_mclk[MI2S_MAX] = {
 		0,
 	}
 };
-#if defined(CONFIG_SND_SOC_TAS2557) || defined(CONFIG_SND_I2S_PRIMARY)
+#if defined(CONFIG_SND_SOC_TAS2557)
 static int pri_i2s_gpio_enable(bool enable);
 #endif
 static struct mi2s_conf mi2s_intf_conf[MI2S_MAX];
@@ -2503,7 +2498,7 @@ int msm_mi2s_snd_startup(struct snd_pcm_substream *substream)
 			mi2s_clk[index].clk_id = mi2s_ebit_clk[index];
 			fmt = SND_SOC_DAIFMT_CBM_CFM;
 		}
-#if defined(CONFIG_SND_SOC_TAS2557) || defined(CONFIG_SND_I2S_PRIMARY)
+#if defined(CONFIG_SND_SOC_TAS2557)
 		pri_i2s_gpio_enable(true);
 #endif
 		ret = msm_mi2s_set_sclk(substream, true);
@@ -2572,7 +2567,7 @@ void msm_mi2s_snd_shutdown(struct snd_pcm_substream *substream)
 			pr_err("%s:clock disable failed for MI2S (%d); ret=%d\n",
 				__func__, index, ret);
 
-#if defined(CONFIG_SND_SOC_TAS2557) || defined(CONFIG_SND_I2S_PRIMARY)
+#if defined(CONFIG_SND_SOC_TAS2557)
 		pri_i2s_gpio_enable(false);
 #endif
 		if (mi2s_intf_conf[index].msm_is_ext_mclk) {
@@ -3044,7 +3039,7 @@ static const struct of_device_id sdm660_asoc_machine_of_match[]  = {
 	  .data = "tavil_codec"},
 	{},
 };
-#if defined(CONFIG_SND_SOC_TAS2557) || defined(CONFIG_SND_I2S_PRIMARY)
+#if defined(CONFIG_SND_SOC_TAS2557)
 	#define PRI_I2S_ACTIVE "pri_i2s_active"
 	#define PRI_I2S_SLEEP "pri_i2s_sleep"
 	struct pri_i2s_gpioset
@@ -3129,7 +3124,7 @@ static int msm_asoc_machine_probe(struct platform_device *pdev)
 	}
 	pdata->mclk_freq = id;
 
-#if defined(CONFIG_SND_SOC_TAS2557) || defined(CONFIG_SND_I2S_PRIMARY)
+#if defined(CONFIG_SND_SOC_TAS2557)
 	ret = pri_i2s_gpio_init(&pdev->dev);
 	if (ret) {
 		dev_err(&pdev->dev,

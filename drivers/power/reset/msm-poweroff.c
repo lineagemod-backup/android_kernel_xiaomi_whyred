@@ -75,8 +75,6 @@ static int in_panic;
 static int dload_type = SCM_DLOAD_FULLDUMP;
 #if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
  int download_mode = 0;
-#elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
-int download_mode = 0;
 #else
  int download_mode = 1;
 #endif

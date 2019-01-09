@@ -707,10 +707,6 @@ static int gf_probe(struct platform_device *pdev)
 	int status = -EINVAL;
 	unsigned long minor;
 	int i;
-#ifdef CONFIG_KERNEL_CUSTOM_WAYNE
-	struct regulator *vreg;
-	int ret = 0;
-#endif
 	printk("Macle11 gf_probe\n");
 	/* Initialize the driver data */
 	INIT_LIST_HEAD(&gf_dev->device_entry);
@@ -726,32 +722,6 @@ static int gf_probe(struct platform_device *pdev)
 	gf_dev->fb_black = 0;
 	gf_dev->wait_finger_down = false;
 	INIT_WORK(&gf_dev->work, notification_work);
-#ifdef CONFIG_KERNEL_CUSTOM_WAYNE
-	vreg = regulator_get(&gf_dev->spi->dev, "vcc_ana");
-		if (!vreg) {
-			dev_err(&gf_dev->spi->dev, "Unable to get vdd_ana\n");
-			goto error_hw;
-		}
-
-		/*if (regulator_count_voltages(vreg) > 0) {
-			ret = regulator_set_voltage(vreg, 3300000,3300000);
-			if (ret){
-				dev_err(&gf_dev->spi->dev,"Unable to set voltage on vdd_ana");
-				goto error_hw;
-			}
-		}
-		*/
-		ret = regulator_enable(vreg);
-		if (ret) {
-			dev_err(&gf_dev->spi->dev, "error enabling vdd_ana %d\n", ret);
-			regulator_put(vreg);
-			vreg = NULL;
-			goto error_hw;
-		}
-		pr_info("Macle Set voltage on vdd_ana for goodix fingerprint");
-
-	msleep(11);
-	#endif
 	/* If we can allocate a minor number, hook up this device.
 	 * Reusing minors is fine so long as udev or mdev is working.
 	 */

@@ -21,7 +21,7 @@
 
 #define SET_DELAY (2 * HZ)
 #define PROC_AWAKE_ID 12 /* 12th bit */
-#if defined(CONFIG_KERNEL_CUSTOM_WAYNE) || defined(CONFIG_KERNEL_CUSTOM_WHYRED)
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 int slst_gpio_base_id;
 #else
 static int slst_gpio_base_id;
@@ -41,7 +41,7 @@ static int sleepstate_pm_notifier(struct notifier_block *nb,
 {
 	switch (event) {
 	case PM_SUSPEND_PREPARE:
-#if defined(CONFIG_KERNEL_CUSTOM_WAYNE) || defined(CONFIG_KERNEL_CUSTOM_WHYRED)
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 #else
 		gpio_set_value(slst_gpio_base_id + PROC_AWAKE_ID, 0);
 #endif
@@ -50,7 +50,7 @@ static int sleepstate_pm_notifier(struct notifier_block *nb,
 		break;
 
 	case PM_POST_SUSPEND:
-#if defined(CONFIG_KERNEL_CUSTOM_WAYNE) || defined(CONFIG_KERNEL_CUSTOM_WHYRED)
+#if defined(CONFIG_KERNEL_CUSTOM_WHYRED)
 #else
 		gpio_set_value(slst_gpio_base_id + PROC_AWAKE_ID, 1);
 #endif

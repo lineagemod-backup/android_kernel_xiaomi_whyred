@@ -2478,19 +2478,6 @@ static void thermal_fb_notifier_resume_work(struct work_struct *work)
 	else
 		smblib_set_prop_system_temp_level(chg, &lct_therm_lvl_reserved);
 	LctThermal = 0;
-#elif defined(CONFIG_KERNEL_CUSTOM_WAYNE)
-	if ((lct_backlight_off) && (LctIsInCall == 0))
-	{
-		if (lct_therm_lvl_reserved.intval >= 2)
-			smblib_set_prop_system_temp_level(chg, &lct_therm_globe_level);
-		else
-			smblib_set_prop_system_temp_level(chg, &lct_therm_level);
-	}
-	else if (LctIsInCall == 1)
-		smblib_set_prop_system_temp_level(chg, &lct_therm_call_level);
-	else
-		smblib_set_prop_system_temp_level(chg, &lct_therm_lvl_reserved);
-	LctThermal = 0;
 #else
 	 if ((lct_backlight_off) && (LctIsInCall == 0) && (hwc_check_india == 0))
 		 smblib_set_prop_system_temp_level(chg, &lct_therm_level);
