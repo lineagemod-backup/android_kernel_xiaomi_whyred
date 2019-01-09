@@ -188,9 +188,6 @@ static int32_t msm_sensor_fill_eeprom_subdevid_by_name(
 	struct device_node *of_node = s_ctrl->of_node;
 	const void *p;
 
-
-
-
 	if (!s_ctrl->sensordata->eeprom_name || !of_node)
 		return -EINVAL;
 	#if LCT_CAMERA_DEBUG
@@ -249,7 +246,6 @@ static int32_t msm_sensor_fill_eeprom_subdevid_by_name(
 		if (!userspace_probe &&
 			strcmp(eeprom_name, s_ctrl->sensordata->eeprom_name))
 			continue;
-
 
 		if (userspace_probe == 1)
 		{
@@ -1541,7 +1537,6 @@ int32_t msm_sensor_driver_probe(void *setting,
 		goto free_camera_info;
 	}
 	cci_client->cci_i2c_master = s_ctrl->cci_i2c_master;
-
 	cci_client->sid = slave_info->slave_addr >> 1;
 	cci_client->retries = 3;
 	cci_client->id_map = 0;

@@ -150,7 +150,6 @@ static int read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
 {
 	int rc = 0;
 	int j;
-
 	struct msm_eeprom_memory_map_t *emap = block->map;
 	struct msm_eeprom_board_info *eb_info;
 	uint8_t *memptr = block->mapdata;
@@ -169,7 +168,6 @@ static int read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
 					eb_info->i2c_slaveaddr >> 1;
 			pr_err("qcom,slave-addr = 0x%X\n",
 				eb_info->i2c_slaveaddr);
-
 		}
 
 		if (emap[j].page.valid_size) {
@@ -211,14 +209,6 @@ static int read_eeprom_memory(struct msm_eeprom_ctrl_t *e_ctrl,
 			rc = e_ctrl->i2c_client.i2c_func_tbl->i2c_read_seq(
 				&(e_ctrl->i2c_client), emap[j].mem.addr,
 				memptr, emap[j].mem.valid_size);
-/* otp data
-			for (otp_idx = 0; otp_idx < emap[j].mem.valid_size; otp_idx = otp_idx+8) {
-				printk("<3>""%s:read otp data: 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x\n", __func__,
-						block->mapdata[otp_idx], block->mapdata[otp_idx+1], block->mapdata[otp_idx+2],
-						block->mapdata[otp_idx+3], block->mapdata[otp_idx+4], block->mapdata[otp_idx+5],
-						block->mapdata[otp_idx+6], block->mapdata[otp_idx+7]);
-			}
-*/
 			if (rc < 0) {
 				pr_err("%s: read failed\n", __func__);
 				return rc;
@@ -1789,6 +1779,7 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 		pr_err("%s failed %d\n", __func__, __LINE__);
 		e_ctrl->userspace_probe = 1;
 	}
+
 	rc = msm_eeprom_get_dt_data(e_ctrl);
 	if (rc < 0)
 		goto board_free;
@@ -1824,6 +1815,7 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 		rc = msm_eeprom_parse_memory_map(of_node, &e_ctrl->cal_data);
 		if (rc < 0)
 			goto board_free;
+
 		rc = msm_camera_power_up(power_info, e_ctrl->eeprom_device_type,
 			&e_ctrl->i2c_client);
 		if (rc) {
@@ -1845,6 +1837,7 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 	}
 
 		e_ctrl->is_supported |= msm_eeprom_match_crc(&e_ctrl->cal_data);
+
 		rc = msm_camera_power_down(power_info,
 			e_ctrl->eeprom_device_type, &e_ctrl->i2c_client);
 		if (rc) {
@@ -1877,6 +1870,7 @@ static int msm_eeprom_platform_probe(struct platform_device *pdev)
 	e_ctrl->is_supported = (e_ctrl->is_supported << 1) | 1;
 	CDBG("%s X\n", __func__);
 	return rc;
+
 power_down:
 	msm_camera_power_down(power_info, e_ctrl->eeprom_device_type,
 		&e_ctrl->i2c_client);

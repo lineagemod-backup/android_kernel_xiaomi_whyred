@@ -205,7 +205,6 @@ int msm_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 		if (rc < 0)
 			return rc;
 
-
 		if (!s_ctrl->is_probe_succeed) {
 			rc = msm_sensor_match_vendor_id(s_ctrl);
 			if (rc < 0) {
@@ -241,7 +240,6 @@ int msm_sensor_match_vendor_id(struct msm_sensor_ctrl_t *s_ctrl)
 	uint16_t vcmid = 0;
 	int have_vcmid = 0;
 	enum cci_i2c_master_t temp_master = MASTER_0;
-
 
 	if (!s_ctrl) {
 		pr_err("%s:%d failed: %pK\n",
@@ -355,7 +353,6 @@ int msm_sensor_match_id(struct msm_sensor_ctrl_t *s_ctrl)
 	struct msm_camera_i2c_client *sensor_i2c_client;
 	struct msm_camera_slave_info *slave_info;
 	const char *sensor_name;
-
 
 	if (!s_ctrl) {
 		pr_err("%s:%d failed: %pK\n",
