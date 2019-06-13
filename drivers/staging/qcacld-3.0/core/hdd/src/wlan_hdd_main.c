@@ -3215,6 +3215,7 @@ static void hdd_adapter_init_action_frame_random_mac(hdd_adapter_t *adapter)
  * @hdd_ctx: global hdd context
  * @macAddr: mac address to assign to the interface
  * @name: User-visible name of the interface
+ * @session_type: interface type to be created
  *
  * hdd adapter pointer would point to the netdev->priv space, this function
  * would retrive the pointer, and setup the hdd adapter configuration.
@@ -4719,6 +4720,8 @@ QDF_STATUS hdd_close_all_adapters(hdd_context_t *hdd_ctx, bool rtnl_held)
 		if (pHddAdapterNode && QDF_STATUS_SUCCESS == status) {
 			wlan_hdd_release_intf_addr(hdd_ctx,
 			pHddAdapterNode->pAdapter->macAddressCurrent.bytes);
+			cds_clear_concurrency_mode(
+				pHddAdapterNode->pAdapter->device_mode);
 			hdd_cleanup_adapter(hdd_ctx, pHddAdapterNode->pAdapter,
 					    rtnl_held);
 
@@ -6780,6 +6783,7 @@ static void hdd_wlan_exit(hdd_context_t *hdd_ctx)
 		hdd_cleanup_scan_queue(hdd_ctx, NULL);
 		hdd_abort_mac_scan_all_adapters(hdd_ctx);
 		hdd_abort_sched_scan_all_adapters(hdd_ctx);
+
 		hdd_stop_all_adapters(hdd_ctx, true);
 		hdd_deinit_all_adapters(hdd_ctx, false);
 	}

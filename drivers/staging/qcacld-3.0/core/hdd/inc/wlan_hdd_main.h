@@ -1980,6 +1980,7 @@ struct hdd_context_s {
 	bool is_ol_rx_thread_suspended;
 #endif
 
+	bool is_ol_mon_thread_suspended;
 	bool hdd_wlan_suspended;
 	bool suspended;
 	/* flag to start pktlog after SSR/PDR if previously enabled */
@@ -2263,6 +2264,8 @@ struct hdd_context_s {
 	enum sar_version sar_version;
 
 	bool is_ssr_in_progress;
+
+	uint8_t pktcapture_mode;
 };
 
 int hdd_validate_channel_and_bandwidth(hdd_adapter_t *adapter,
